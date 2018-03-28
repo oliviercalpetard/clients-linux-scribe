@@ -243,9 +243,8 @@ apt update ; apt full-upgrade -y
 ####################################################
 if [ "$esubuntu" = "O" ] || [ "$esubuntu" = "o" ] ; then 
 
-  if [ "$(which gnome-shell)" = "/usr/bin/gnome-shell" ] ; then # Si version de base sous Gnome
-    mkdir /etc/lightdm # uniquement pour les besoins d'Esubuntu puisque LightDM n'est pas installé
-  fi
+  mkdir /etc/esubuntu # nouveau repertoire de travail d'Esubuntu indépendant du systéme installé
+  
   
   # Téléchargement des paquets
   wget http://nux87.online.fr/esu_ubuntu/esu_ubuntu.zip
@@ -261,14 +260,14 @@ if [ "$esubuntu" = "O" ] || [ "$esubuntu" = "o" ] ; then
     add-apt-repository -y ppa:vincent-c/conky #conky est backporté pour avoir une version récente quelque soit la distrib
     apt update
   fi
-  apt install -y zenity conky
+  apt install -y zenity conky conky-all
   
   # Ajout de Net-tools pour ifconfig en 18.04 et futures versions
   apt install -y net-tools
 
   # Copie des fichiers
-  cp -rf ./esu_ubuntu/lightdm/* /etc/lightdm/
-  chmod +x /etc/lightdm/*.sh
+  cp -rf ./esu_ubuntu/esubuntu/* /etc/esubuntu/
+  chmod +x /etc/esubuntu/*.sh
   cp -rf ./esu_ubuntu/xdg_autostart/* /etc/xdg/autostart/
   chmod +x /etc/xdg/autostart/message_scribe.desktop
   chmod +x /etc/xdg/autostart/scribe_background.desktop
@@ -290,13 +289,13 @@ if [ "$esubuntu" = "O" ] || [ "$esubuntu" = "o" ] ; then
   mv wallpaper /usr/share/
 
   # Inscription de la tache upkg dans crontab
-  echo "*/20 * * * * root /etc/lightdm/groupe.sh" > /etc/crontab
+  echo "*/20 * * * * root /etc/esubuntu/groupe.sh" > /etc/crontab
   
   # Si il reste encore une trace de cntlm dans xdg autostart :
   rm -f /etc/xdg/autostart/cntlm*
   
   # Modification de la valeur en dur à la fin du fichier background.sh pour correspondre au bon groupe ESU
-  sed -i -e "s/posteslinux/$salle/g" /etc/lightdm/background.sh
+  sed -i -e "s/posteslinux/$salle/g" /etc/esubuntu/background.sh
   
   #nettoyage
   rm -f esu_ubuntu.zip
